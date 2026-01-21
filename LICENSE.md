@@ -1,5 +1,5 @@
-# Icii White Web Assets License Agreement v1.0
-## Copyright (C) 2024-2026 Icii White (https://github.com/iciiwhite)
+### Icii White Web Assets License Agreement v1.0
+> © 2026 Icii White 
 ### ALL RIGHTS RESERVED.
 
 ## PREAMBLE

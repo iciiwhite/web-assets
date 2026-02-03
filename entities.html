@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icii Assets | HTML Entity Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-primary: #2563eb;
+        }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            scroll-behavior: smooth;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .entity-card {
+            transition: all 0.2s ease;
+        }
+        .entity-card:hover {
+            transform: translateY(-2px);
+        }
+        #copy-toast {
+            transform: translateX(-50%) translateY(100px);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+        #copy-toast.show { transform: translateX(-50%) translateY(0); }
+
+        .range-btn.active {
+            background-color: var(--brand-primary);
+            color: white;
+            border-color: var(--brand-primary);
+        }
+        
+        .section-header {
+            position: relative;
+            padding-left: 1rem;
+        }
+        .section-header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--brand-primary);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-blue-100 dark:selection:bg-blue-900">
+
+    <!-- Professional Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">I</div>
+                <span class="font-bold text-slate-900 dark:text-white tracking-tight">Icii <span class="text-blue-600">Assets</span></span>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                <div class="hidden md:block text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-widest">Developers' Entity Reference</div>
+                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <!-- Sun Icon -->
+                    <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <!-- Moon Icon -->
+                    <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="bg-white dark:bg-slate-900 pt-16 pb-12 transition-colors">
+        <div class="max-w-7xl mx-auto px-6">
+            <h1 class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4 text-balance">HTML Entity Guide</h1>
+            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl font-light mb-10">
+                The professional standard for named and numeric HTML character entities. Browse and copy semantic entities for clean web markup.
+            </p>
+
+            <!-- Search Area -->
+            <div class="max-w-2xl">
+                <div class="relative group">
+                    <input type="text" id="searchInput" placeholder="Search by character, name (copy) or decimal (169)..." 
+                           class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 pl-12 rounded-xl text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all shadow-sm">
+                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        
+        <!-- Named Entities Section -->
+        <section id="namedSection" class="mb-16">
+            <div class="section-header mb-8">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Named Character Entities</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Semantic aliases for frequently used symbols and icons.</p>
+            </div>
+            <div id="namedGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- Numeric Entities Section -->
+        <section id="numericSection">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-10 gap-6">
+                <div class="section-header">
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Numeric Reference</h2>
+                    <div id="stats" class="text-sm font-medium text-slate-500 dark:text-slate-400">Syncing database...</div>
+                </div>
+                
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="changeRange(1, 1000, this)" class="range-btn active px-5 py-2.5 text-sm font-semibold border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm">1 — 1K</button>
+                    <button onclick="changeRange(1001, 2500, this)" class="range-btn px-5 py-2.5 text-sm font-semibold border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm">1K — 2.5K</button>
+                    <button onclick="changeRange(2501, 5000, this)" class="range-btn px-5 py-2.5 text-sm font-semibold border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm">2.5K — 5K</button>
+                    <button onclick="changeRange(8000, 10000, this)" class="range-btn px-5 py-2.5 text-sm font-semibold border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm">8K — 10K</button>
+                </div>
+            </div>
+
+            <div id="entityGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <div id="loadingIndicator" class="py-32 text-center hidden">
+            <div class="inline-block w-10 h-10 border-4 border-slate-200 dark:border-slate-700 border-t-blue-600 rounded-full animate-spin"></div>
+            <p class="text-sm mt-4 font-medium text-slate-500 dark:text-slate-400 uppercase tracking-widest">Rebuilding Index...</p>
+        </div>
+    </main>
+
+    <!-- Copy Confirmation Toast -->
+    <div id="copy-toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4 border border-white/10 dark:border-slate-200">
+        <div class="bg-green-500 rounded-full p-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <span class="font-medium text-sm">Entity code copied to clipboard</span>
+    </div>
+
+    <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-12 mt-20 transition-colors">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p class="text-sm text-slate-400 dark:text-slate-500">© 2026 Icii Assets. Professional Resource.</p>
+            <div class="flex gap-8 text-sm font-medium text-slate-500 dark:text-slate-400">
+                <a href="#" class="hover:text-blue-600 transition-colors">Documentation</a>
+                <a href="#" class="hover:text-blue-600 transition-colors">Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const grid = document.getElementById('entityGrid');
+        const namedGrid = document.getElementById('namedGrid');
+        const searchInput = document.getElementById('searchInput');
+        const stats = document.getElementById('stats');
+        const loading = document.getElementById('loadingIndicator');
+        const toast = document.getElementById('copy-toast');
+        const htmlRoot = document.getElementById('html-root');
+        const themeBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        
+        let currentMin = 1;
+        let currentMax = 1000;
+
+        // Theme Logic
+        themeBtn.onclick = () => {
+            const isDark = htmlRoot.classList.toggle('dark');
+            sunIcon.classList.toggle('hidden', !isDark);
+            moonIcon.classList.toggle('hidden', isDark);
+        };
+
+        // Named Entity Dataset
+        const namedEntities = [
+            { name: '&amp;', char: '&', desc: 'Ampersand' },
+            { name: '&copy;', char: '©', desc: 'Copyright' },
+            { name: '&reg;', char: '®', desc: 'Registered' },
+            { name: '&trade;', char: '™', desc: 'Trademark' },
+            { name: '&euro;', char: '€', desc: 'Euro Currency' },
+            { name: '&pound;', char: '£', desc: 'Pound Sterling' },
+            { name: '&yen;', char: '¥', desc: 'Yen / Yuan' },
+            { name: '&cent;', char: '¢', desc: 'Cent' },
+            { name: '&deg;', char: '°', desc: 'Degree' },
+            { name: '&sect;', char: '§', desc: 'Section' },
+            { name: '&para;', char: '¶', desc: 'Paragraph' },
+            { name: '&pi;', char: 'π', desc: 'Pi Constant' },
+            { name: '&times;', char: '×', desc: 'Multiplication' },
+            { name: '&divide;', char: '÷', desc: 'Division' },
+            { name: '&plusmn;', char: '±', desc: 'Plus-Minus' },
+            { name: '&equiv;', char: '≡', desc: 'Bars / Equivalent' },
+            { name: '&mdash;', char: '—', desc: 'Em Dash' },
+            { name: '&ndash;', char: '–', desc: 'En Dash' },
+            { name: '&hellip;', char: '…', desc: 'Ellipsis' },
+            { name: '&bull;', char: '•', desc: 'Bullet' },
+            { name: '&nbsp;', char: ' ', desc: 'Non-breaking Space' },
+            { name: '&lt;', char: '<', desc: 'Less Than' },
+            { name: '&gt;', char: '>', desc: 'Greater Than' },
+            { name: '&quot;', char: '"', desc: 'Double Quote' },
+            { name: '&apos;', char: "'", desc: 'Single Quote' },
+            { name: '&lowast;', char: '∗', desc: 'Asterisk Operator' },
+            { name: '&dagger;', char: '†', desc: 'Dagger' },
+            { name: '&Dagger;', char: '‡', desc: 'Double Dagger' },
+            { name: '&fnof;', char: 'ƒ', desc: 'Function / Florin' },
+            { name: '&lsquo;', char: '‘', desc: 'Left Single Quote' },
+            { name: '&rsquo;', char: '’', desc: 'Right Single Quote' },
+            { name: '&ldquo;', char: '“', desc: 'Left Double Quote' },
+            { name: '&rdquo;', char: '”', desc: 'Right Double Quote' },
+            { name: '&larr;', char: '←', desc: 'Left Arrow' },
+            { name: '&uarr;', char: '↑', desc: 'Up Arrow' },
+            { name: '&rarr;', char: '→', desc: 'Right Arrow' },
+            { name: '&darr;', char: '↓', desc: 'Down Arrow' },
+            { name: '&harr;', char: '↔', desc: 'Left Right Arrow' },
+            { name: '&spades;', char: '♠', desc: 'Spades' },
+            { name: '&clubs;', char: '♣', desc: 'Clubs' },
+            { name: '&hearts;', char: '♥', desc: 'Hearts' },
+            { name: '&diams;', char: '♦', desc: 'Diamonds' },
+            { name: '&forall;', char: '∀', desc: 'For All' },
+            { name: '&part;', char: '∂', desc: 'Partial Differential' },
+            { name: '&exist;', char: '∃', desc: 'There Exists' },
+            { name: '&empty;', char: '∅', desc: 'Empty Set' },
+            { name: '&nabla;', char: '∇', desc: 'Nabla / Del' },
+            { name: '&isin;', char: '∈', desc: 'Element Of' },
+            { name: '&notin;', char: '∉', desc: 'Not Element Of' },
+            { name: '&ni;', char: '∋', desc: 'Contains as Member' },
+            { name: '&prod;', char: '∏', desc: 'N-ary Product' },
+            { name: '&sum;', char: '∑', desc: 'N-ary Summation' }
+        ];
+
+        window.onload = () => {
+            renderNamedEntities();
+            renderEntities(1, 1000);
+        };
+
+        function changeRange(min, max, btn) {
+            currentMin = min;
+            currentMax = max;
+            document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderEntities(min, max);
+        }
+
+        function escapeEntity(code) {
+            return code.replace(/&/g, "&amp;");
+        }
+
+        function renderNamedEntities(filter = '') {
+            namedGrid.innerHTML = '';
+            const filtered = namedEntities.filter(e => 
+                e.name.toLowerCase().includes(filter.toLowerCase()) || 
+                e.desc.toLowerCase().includes(filter.toLowerCase()) ||
+                e.char.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                document.getElementById('namedSection').classList.add('hidden');
+                return;
+            }
+            document.getElementById('namedSection').classList.remove('hidden');
+
+            filtered.forEach(e => {
+                const card = createCard(e.char, e.name, e.desc);
+                namedGrid.appendChild(card);
+            });
+        }
+
+        function createCard(char, code, subtext) {
+            const card = document.createElement('div');
+            card.className = 'entity-card p-6 rounded-xl flex flex-col items-center justify-center group relative cursor-pointer bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-blue-500 dark:hover:border-blue-500 shadow-sm hover:shadow-lg transition-all';
+            card.onclick = () => copyToClipboard(code);
+            
+            card.innerHTML = `
+                <div class="text-4xl mb-6 text-slate-800 dark:text-slate-100 group-hover:text-blue-600 transition-colors h-10 flex items-center">
+                    ${char === ' ' ? '<span class="text-xs text-slate-300 dark:text-slate-600 border border-dashed p-1">SPACE</span>' : char}
+                </div>
+                <div class="text-center w-full">
+                    <code class="mono text-[11px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded mb-2 block tracking-tight">
+                        ${escapeEntity(code)}
+                    </code>
+                    <span class="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest block truncate">${subtext}</span>
+                </div>
+                <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </div>
+            `;
+            return card;
+        }
+
+        function renderEntities(min, max, filter = '') {
+            loading.classList.remove('hidden');
+            grid.innerHTML = '';
+            
+            setTimeout(() => {
+                let fragment = document.createDocumentFragment();
+                let count = 0;
+
+                for (let i = min; i <= max; i++) {
+                    const decimalCode = `&#${i};`;
+                    if (filter && !i.toString().includes(filter) && !decimalCode.includes(filter)) continue;
+
+                    let displayChar = String.fromCodePoint(i);
+                    if (i < 32 || (i >= 127 && i <= 159)) displayChar = '·';
+
+                    const card = createCard(displayChar, decimalCode, `DECIMAL ${i}`);
+                    fragment.appendChild(card);
+                    count++;
+                }
+
+                grid.appendChild(fragment);
+                stats.innerText = `Indexing ${count.toLocaleString()} assets in set`;
+                loading.classList.add('hidden');
+            }, 10);
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            renderNamedEntities(val);
+            if (val.length > 0) {
+                renderEntities(1, 5000, val);
+            } else {
+                renderEntities(currentMin, currentMax);
+            }
+        });
+
+        function copyToClipboard(text) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

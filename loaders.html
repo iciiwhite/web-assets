@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlassCore - Loader Library</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    <script src="loaders.js"></script>
+    <link rel="stylesheet" href="loaders.css">
+</head>
+<body>
+
+    <header>
+        <h1>Glass<span>Core</span></h1>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search loaders...">
+        </div>
+    </header>
+
+    <main id="gallery"></main>
+
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-preview">
+                <div id="modalPreviewContainer" class="preview-target"></div>
+                <h2 id="modalTitle">Loader Name</h2>
+                <p>Module Active</p>
+            </div>
+            <div class="modal-editor">
+                <div class="editor-header">
+                    <span>CSS Source</span>
+                    <div class="editor-actions">
+                        <button id="copyBtn" class="glass-button">COPY</button>
+                        <button id="closeModal" class="glass-button">✕</button>
+                    </div>
+                </div>
+                <div id="editorContainer">
+                    <textarea id="codeEditor"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style id="dynamic-styles"></style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
+
+    <script>
+        let editor;
+        const dynamicStyleTag = document.getElementById('dynamic-styles');
+        const gallery = document.getElementById('gallery');
+        const modal = document.getElementById('modalOverlay');
+        const previewContainer = document.getElementById('modalPreviewContainer');
+
+        function initEditor() {
+            editor = CodeMirror.fromTextArea(document.getElementById('codeEditor'), {
+                mode: 'css', theme: 'dracula', lineNumbers: true, lineWrapping: true,
+            });
+            editor.on('change', () => {
+                const override = editor.getValue();
+                dynamicStyleTag.innerHTML = loaderData.map(l => l.css).join('\n') + "\n" + override;
+            });
+        }
+
+        function initGallery() {
+            dynamicStyleTag.innerHTML = loaderData.map(l => l.css).join('\n');
+            gallery.innerHTML = '';
+            loaderData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "loader-card";
+                card.innerHTML = `<div class="grid-loader-wrapper">${item.html}</div>`;
+                card.onclick = () => {
+                    document.getElementById('modalTitle').innerText = item.name;
+                    previewContainer.innerHTML = item.html;
+                    editor.setValue(item.css);
+                    modal.classList.add('active');
+                    setTimeout(() => editor.refresh(), 100);
+                };
+                gallery.appendChild(card);
+            });
+        }
+
+        document.getElementById('closeModal').onclick = () => modal.classList.remove('active');
+        
+        document.getElementById('copyBtn').onclick = () => {
+            const btn = document.getElementById('copyBtn');
+            const textToCopy = editor.getValue();
+            
+            // Using execCommand for better compatibility in iframes
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    btn.innerText = "COPIED!";
+                    setTimeout(() => btn.innerText = "COPY", 2000);
+                }
+            } catch (err) {
+                console.error('Fallback copy failed', err);
+            }
+            
+            document.body.removeChild(textArea);
+        };
+
+        document.getElementById('searchInput').oninput = (e) => {
+            const term = e.target.value.toLowerCase();
+            const cards = gallery.children;
+            loaderData.forEach((data, i) => {
+                cards[i].style.display = data.name.toLowerCase().includes(term) ? 'flex' : 'none';
+            });
+        };
+
+        window.onload = () => { initEditor(); initGallery(); };
+    </script>
+</body>
+</html>

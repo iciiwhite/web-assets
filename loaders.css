@@ -1,0 +1,241 @@
+        :root {
+            --glass: rgba(15, 15, 15, 0.4);
+            --glass-thick: rgba(10, 10, 10, 0.9);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-bright: rgba(255, 255, 255, 0.15);
+            --accent: #3b82f6;
+            --bg: #030303;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(40, 40, 60, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(30, 20, 30, 0.15) 0%, transparent 40%);
+            color: #efefef;
+            min-height: 100vh;
+            font-family: system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+            padding: 40px;
+        }
+
+        header {
+            max-width: 1400px;
+            margin: 0 auto 60px auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 24px;
+        }
+
+        h1 span { opacity: 0.3; }
+
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 16px 32px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-container input:focus {
+            border-color: var(--border-bright);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        #gallery {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+        }
+
+        .loader-card {
+            position: relative;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .loader-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--border-bright);
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .grid-loader-wrapper { transform: scale(0.6); }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s ease;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: var(--glass-thick);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 900px;
+            border-radius: 32px;
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-preview {
+            width: ;
+            padding:5px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.01);
+            border-right: 1px solid var(--border);
+        }
+
+        .preview-target { transform: scale(2.5); margin-bottom: 60px; }
+
+        .modal-preview h2 { font-size: 24px; font-weight: 300; margin-bottom: 8px; }
+
+        .modal-preview p {
+            font-size: 10px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+
+        .modal-editor {
+            width: 55%;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .editor-header span {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            font-family: monospace;
+        }
+
+        .editor-actions { display: flex; gap: 12px; }
+
+        .glass-button {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-bright);
+        }
+
+        .CodeMirror {
+            height: 400px !important;
+            background: rgba(0, 0, 0, 0.3) !important;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-family: 'Fira Code', monospace;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 20px; }
+            .modal-content { flex-direction: column; height: 90vh; overflow-y: auto; }
+            .modal-preview, .modal-editor { width: 100%; border: none; }
+            .modal-preview { padding: 60px 20px; }
+            #gallery { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+        }
+
+        #dynamic-styles { display: none; }
+        
+        ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
+
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #666 #e0e0e0;
+}

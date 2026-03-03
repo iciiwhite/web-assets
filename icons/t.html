@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Network Speed Monitor · Bar graphs</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #0b1a2f;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .card {
+            max-width: 780px;
+            width: 100%;
+            background: #142b44;
+            border-radius: 32px;
+            padding: 28px 24px;
+            box-shadow: 0 25px 40px -10px rgba(0, 0, 0, 0.6);
+            border: 1px solid #2f4b6e;
+            color: #e2edf7;
+        }
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 400;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h1 span {
+            background: #1f3a57;
+            padding: 4px 14px;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #9ab8e0;
+        }
+        .sub {
+            opacity: 0.8;
+            margin-bottom: 28px;
+            border-left: 4px solid #4f9fff;
+            padding-left: 18px;
+            font-size: 1rem;
+            background: #0f253b;
+            border-radius: 0 20px 20px 0;
+            line-height: 1.5;
+            width: fit-content;
+            padding: 10px 20px;
+        }
+        .graph-panel {
+            background: #0e1e30;
+            border-radius: 24px;
+            padding: 22px 20px 20px 20px;
+            margin-bottom: 32px;
+            border: 1px solid #2f4b6e;
+        }
+        .panel-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 15px;
+            color: #b8d4f0;
+            font-weight: 500;
+        }
+        .panel-title strong {
+            color: white;
+            background: #1f3a57;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+        }
+        .live-indicator {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: #3acf6b;
+            border-radius: 50%;
+            box-shadow: 0 0 12px #27d364;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            background: #102436;
+            border-radius: 18px;
+            padding: 8px;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.6);
+            margin-top: 6px;
+        }
+        .stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 18px;
+            gap: 12px;
+        }
+        .stat-box {
+            background: #0e1e30;
+            border-radius: 24px;
+            padding: 16px 22px;
+            flex: 1 1 160px;
+            border: 1px solid #2c445e;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8aa9cc;
+        }
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 500;
+            line-height: 1.2;
+            color: white;
+        }
+        .stat-unit {
+            font-size: 1rem;
+            color: #7c9bc0;
+            margin-left: 5px;
+        }
+        .test-area {
+            background: #0e1e30;
+            border-radius: 26px;
+            padding: 22px;
+            border: 1px solid #2f4b6e;
+        }
+        .test-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background: #2b4b70;
+            border: none;
+            color: white;
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 14px 32px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #0b1a2f;
+            transition: 0.1s ease;
+            border: 1px solid #5982b0;
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #0b1a2f;
+        }
+        .btn:disabled {
+            opacity: 0.45;
+            transform: translateY(2px);
+            box-shadow: 0 3px 0 #0b1a2f;
+            pointer-events: none;
+        }
+        .history-hint {
+            font-size: 0.9rem;
+            color: #a7c3e2;
+            background: #1a314b;
+            padding: 6px 16px;
+            border-radius: 40px;
+        }
+        .history-list {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        .mini-bar-container {
+            flex: 1 1 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .mini-bar {
+            width: 100%;
+            background: #1c3857;
+            height: 100px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column-reverse;
+            overflow: hidden;
+            border: 1px solid #345e88;
+        }
+        .mini-fill {
+            background: linear-gradient(0deg, #4f9fff, #79b8ff);
+            width: 100%;
+            transition: height 0.2s;
+            border-radius: 8px 8px 4px 4px;
+        }
+        .mini-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            background: #1f3a57;
+            padding: 4px 0;
+            width: 100%;
+            text-align: center;
+            border-radius: 20px;
+        }
+        .note {
+            margin-top: 22px;
+            font-size: 0.85rem;
+            color: #9ab8dc;
+            background: #0b1a2f;
+            padding: 12px 18px;
+            border-radius: 40px;
+            border: 1px dashed #3f6190;
+        }
+        .note i {
+            color: #d9eaff;
+        }
+        .footer {
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>
+        📶 NETWORK GAUGE
+        <span>offline + live</span>
+    </h1>
+    <div class="sub">
+        ⚡ Bar graphs show estimated & measured speed — avoid work during red bars
+    </div>
+
+    <!-- live connection bar (from browser API) -->
+    <div class="graph-panel">
+        <div class="panel-title">
+            <span><strong>🔁 LIVE ESTIMATE</strong> (navigator.connection)</span>
+            <span class="live-indicator"><span class="dot"></span> updating every 2s</span>
+        </div>
+        <canvas id="liveCanvas" width="600" height="110" style="width:100%; height:auto; max-width:100%;"></canvas>
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-label">DOWNLINK</div>
+                <div class="stat-value" id="downlinkVal">—<span class="stat-unit">Mbps</span></div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">RTT</div>
+                <div class="stat-value" id="rttVal">—<span class="stat-unit">ms</span></div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">EFFECTIVE TYPE</div>
+                <div class="stat-value" id="effectiveType">—</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- manual speed test + history bar graph -->
+    <div class="test-area">
+        <div class="test-header">
+            <button class="btn" id="speedTestBtn">🚀 RUN SPEED TEST</button>
+            <span class="history-hint" id="testStatus">⏳ last 5 tests</span>
+        </div>
+
+        <!-- history bar graph (canvas) -->
+        <canvas id="historyCanvas" width="600" height="130" style="width:100%; height:auto; max-width:100%; margin-bottom: 10px;"></canvas>
+
+        <!-- fallback mini bars (text list) will be hidden, canvas is primary, but we keep as backup display? 
+             we can also render numeric list, but canvas is enough. we'll keep a small numeric row for clarity -->
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+            <div id="historyNumbers" style="font-size:1rem; color: #b7d5f5;">No tests yet</div>
+            <div style="font-size:0.9rem;">⬆️ max 100 Mbps scale</div>
+        </div>
+        <div class="note">
+            <i>ℹ️</i> Speed test downloads 500KB from httpbin.org — requires internet. Results shown as bars (last 5). 
+            Red / orange bars = unstable. Use live estimate when offline.
+        </div>
+    </div>
+    <div class="footer">
+        ⚙️ works offline · refresh updates connection data
+    </div>
+</div>
+
+<script>
+(function() {
+    // --------------------------------------------------------------
+    // DOM elements
+    const liveCanvas = document.getElementById('liveCanvas');
+    const ctxLive = liveCanvas.getContext('2d');
+    const historyCanvas = document.getElementById('historyCanvas');
+    const ctxHistory = historyCanvas.getContext('2d');
+
+    const downlinkSpan = document.getElementById('downlinkVal');
+    const rttSpan = document.getElementById('rttVal');
+    const effectiveSpan = document.getElementById('effectiveType');
+    const testStatus = document.getElementById('testStatus');
+    const historyNumbersDiv = document.getElementById('historyNumbers');
+    const speedTestBtn = document.getElementById('speedTestBtn');
+
+    // --------------------------------------------------------------
+    // Configuration
+    const MAX_HISTORY = 5;                // keep last 5 tests
+    const MAX_SPEED_SCALE = 100;           // bars scaled to 100 Mbps
+    const LIVE_MAX_SCALE = 100;            // live bar also max 100 Mbps
+    const SPEED_TEST_SIZE_BYTES = 500 * 1024; // 500 KB (512000 bytes)
+    const TEST_URL = `https://httpbin.org/bytes/${SPEED_TEST_SIZE_BYTES}?rnd=${Date.now()}`; // cache buster inside function
+
+    // --------------------------------------------------------------
+    // State
+    let testHistory = [];                  // array of {speed, timestamp}
+    let isTesting = false;
+    let liveInterval = null;
+    let connectionAvailable = ('connection' in navigator && navigator.connection);
+
+    // Live data cache
+    let currentDownlink = 0;
+    let currentRtt = 0;
+    let currentEffectiveType = 'unknown';
+
+    // --------------------------------------------------------------
+    // Helper: format speed
+    function formatSpeed(mbps) {
+        return mbps.toFixed(1);
+    }
+
+    // --------------------------------------------------------------
+    // Draw live bar (connection downlink)
+    function drawLiveBar(downlinkMbps) {
+        ctxLive.clearRect(0, 0, liveCanvas.width, liveCanvas.height);
+        const w = liveCanvas.width;
+        const h = liveCanvas.height;
+
+        // background
+        ctxLive.fillStyle = '#102436';
+        ctxLive.fillRect(0, 0, w, h);
+
+        // bar dimensions
+        const barX = 30;
+        const barY = 25;
+        const barWidth = w - 90;
+        const barHeight = 40;
+
+        // background bar
+        ctxLive.fillStyle = '#233c58';
+        ctxLive.fillRect(barX, barY, barWidth, barHeight);
+        // fill based on speed / max
+        let speed = Math.min(downlinkMbps, LIVE_MAX_SCALE);
+        let fillWidth = (speed / LIVE_MAX_SCALE) * barWidth;
+
+        // color gradient based on speed
+        let hue = Math.min(120, (speed / 50) * 120); // 0 red, 120 green
+        if (speed > 50) hue = 120; // keep green above 50
+        ctxLive.fillStyle = `hsl(${hue}, 80%, 60%)`;
+        ctxLive.fillRect(barX, barY, fillWidth, barHeight);
+
+        // border
+        ctxLive.strokeStyle = '#4f739b';
+        ctxLive.lineWidth = 2;
+        ctxLive.strokeRect(barX, barY, barWidth, barHeight);
+
+        // text
+        ctxLive.font = 'bold 20px "Segoe UI", monospace';
+        ctxLive.fillStyle = '#f0f6ff';
+        ctxLive.fillText(`${downlinkMbps.toFixed(1)} Mbps`, barX + 20, barY + 30);
+
+        // scale markers
+        ctxLive.font = '12px "Segoe UI"';
+        ctxLive.fillStyle = '#aac2df';
+        ctxLive.fillText('0', barX - 15, barY + 28);
+        ctxLive.fillText(`${LIVE_MAX_SCALE} Mbps`, barX + barWidth - 55, barY - 6);
+
+        // additional text for rtt / type (compact)
+        ctxLive.font = 'bold 14px "Segoe UI"';
+        ctxLive.fillStyle = '#c4daf5';
+        ctxLive.fillText(`RTT ${currentRtt} ms`, barX + barWidth + 10, barY + 18);
+        ctxLive.fillText(`${currentEffectiveType}`, barX + barWidth + 10, barY + 38);
+    }
+
+    // --------------------------------------------------------------
+    // Draw history bar chart (last N tests)
+    function drawHistoryBars() {
+        ctxHistory.clearRect(0, 0, historyCanvas.width, historyCanvas.height);
+        const w = historyCanvas.width;
+        const h = historyCanvas.height;
+
+        // background
+        ctxHistory.fillStyle = '#102436';
+        ctxHistory.fillRect(0, 0, w, h);
+
+        if (!testHistory.length) {
+            ctxHistory.font = '16px "Segoe UI"';
+            ctxHistory.fillStyle = '#6f8db0';
+            ctxHistory.fillText('⬅️ Run a speed test to see bars', 50, 70);
+            return;
+        }
+
+        const count = Math.min(testHistory.length, MAX_HISTORY);
+        const barWidth = (w - 100) / count - 8; // leave gaps
+        const startX = 50;
+        const baseY = 90; // bottom of bars
+        const maxBarHeight = 70;
+
+        // draw scale line and markers
+        ctxHistory.strokeStyle = '#345c84';
+        ctxHistory.lineWidth = 1;
+        ctxHistory.beginPath();
+        ctxHistory.moveTo(30, baseY);
+        ctxHistory.lineTo(w - 30, baseY);
+        ctxHistory.stroke();
+
+        // show max label
+        ctxHistory.font = '11px "Segoe UI"';
+        ctxHistory.fillStyle = '#a3c1e3';
+        ctxHistory.fillText('0', 20, baseY + 4);
+        ctxHistory.fillText(`${MAX_SPEED_SCALE} Mbps`, 20, baseY - maxBarHeight - 2);
+
+        for (let i = 0; i < count; i++) {
+            const item = testHistory[i];
+            const speedMbps = Math.min(item.speed, MAX_SPEED_SCALE);
+            const barHeight = (speedMbps / MAX_SPEED_SCALE) * maxBarHeight;
+
+            const x = startX + i * (barWidth + 15);
+            const y = baseY - barHeight;
+
+            // bar color: red if below 10, orange < 30, green else
+            let barColor = '#3acf6b'; // green
+            if (item.speed < 10) barColor = '#f24a4a'; // red
+            else if (item.speed < 30) barColor = '#f9a14b'; // orange
+
+            ctxHistory.fillStyle = barColor;
+            ctxHistory.fillRect(x, y, barWidth, barHeight);
+
+            // border
+            ctxHistory.strokeStyle = '#c2d6f0';
+            ctxHistory.lineWidth = 1;
+            ctxHistory.strokeRect(x, y, barWidth, barHeight);
+
+            // label with speed value
+            ctxHistory.font = 'bold 12px "Segoe UI"';
+            ctxHistory.fillStyle = '#ffffff';
+            ctxHistory.fillText(`${item.speed.toFixed(1)}`, x + 2, y - 4);
+        }
+
+        // update numeric div
+        let text = '';
+        testHistory.slice().reverse().forEach((t, idx) => {
+            text += `#${testHistory.length - idx}: ${t.speed.toFixed(1)} Mbps  `;
+        });
+        historyNumbersDiv.innerText = text || 'No tests';
+    }
+
+    // --------------------------------------------------------------
+    // Update live data from NetworkInformation API
+    function updateLiveInfo() {
+        if (connectionAvailable) {
+            const conn = navigator.connection;
+            currentDownlink = conn.downlink || 0;        // in Mbps
+            currentRtt = conn.rtt || 0;                  // in ms
+            currentEffectiveType = conn.effectiveType || 'unknown';
+
+            downlinkSpan.innerText = currentDownlink.toFixed(1);
+            rttSpan.innerText = currentRtt;
+            effectiveSpan.innerText = currentEffectiveType;
+        } else {
+            // fallback if API not supported
+            currentDownlink = 0;
+            currentRtt = 0;
+            currentEffectiveType = 'N/A';
+            downlinkSpan.innerText = '?';
+            rttSpan.innerText = '?';
+            effectiveSpan.innerText = 'unavailable';
+        }
+        drawLiveBar(currentDownlink);
+    }
+
+    // --------------------------------------------------------------
+    // Speed test logic (fetch with timing)
+    async function performSpeedTest() {
+        if (isTesting) return;
+        isTesting = true;
+        speedTestBtn.disabled = true;
+        testStatus.innerText = '🔄 testing... (500 KB)';
+
+        const startTime = performance.now();
+        const url = `https://httpbin.org/bytes/${SPEED_TEST_SIZE_BYTES}?cachebust=${Date.now()}_${Math.random()}`;
+
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+
+            const response = await fetch(url, {
+                cache: 'no-store',
+                signal: controller.signal,
+                mode: 'cors'
+            });
+
+            clearTimeout(timeoutId);
+
+            if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+
+            const blob = await response.blob();
+            const endTime = performance.now();
+            const durationSec = (endTime - startTime) / 1000; // seconds
+
+            const bitsLoaded = blob.size * 8;
+            const speedMbps = bitsLoaded / durationSec / 1e6;
+
+            // store in history (limit to MAX_HISTORY, keep newest)
+            testHistory.push({ speed: speedMbps, timestamp: Date.now() });
+            if (testHistory.length > MAX_HISTORY) testHistory.shift();
+
+            testStatus.innerText = `✅ last: ${speedMbps.toFixed(2)} Mbps`;
+            drawHistoryBars();
+
+        } catch (err) {
+            console.warn('speed test error', err);
+            testStatus.innerText = `⚠️ test failed (${err.message || 'timeout? cors?'})`;
+            // optionally push null? better to not add to history
+        } finally {
+            isTesting = false;
+            speedTestBtn.disabled = false;
+        }
+    }
+
+    // --------------------------------------------------------------
+    // Set up live updates (every 2 seconds)
+    function startLiveUpdates() {
+        updateLiveInfo(); // immediate
+        if (connectionAvailable) {
+            // also listen to change event if supported
+            navigator.connection.addEventListener('change', () => {
+                updateLiveInfo();
+            });
+        }
+        // interval as fallback (also updates every 2s)
+        liveInterval = setInterval(updateLiveInfo, 2000);
+    }
+
+    // --------------------------------------------------------------
+    // Initial drawing
+    startLiveUpdates();
+    drawHistoryBars();
+
+    // --------------------------------------------------------------
+    // Button handler
+    speedTestBtn.addEventListener('click', () => {
+        performSpeedTest().catch(e => {
+            testStatus.innerText = '❌ error';
+            console.error(e);
+        });
+    });
+
+    // Cleanup on page unload (optional)
+    window.addEventListener('beforeunload', () => {
+        if (liveInterval) clearInterval(liveInterval);
+    });
+
+    // If connection API is missing, show message in live bar
+    if (!connectionAvailable) {
+        downlinkSpan.innerText = 'N/A';
+        effectiveSpan.innerText = 'unsupported';
+        // redraw live bar with 0 but show message
+        currentDownlink = 0;
+        currentEffectiveType = 'API missing';
+        drawLiveBar(0);
+    }
+
+    // extra resize handling: keep crisp canvas (size fixed, but we keep as is)
+    // ensure canvas dimensions match CSS (they are set inline width/height, good)
+
+    // also run speed test as demo? no, wait user.
+    // fill history with placeholder demo? maybe not, keep clean.
+    // but we can add a dummy demo to show how bars look? we'll leave empty.
+    // however, we can add one simulated test to demonstrate? maybe not, user should click.
+    // but for clarity, we might push a dummy placeholder? no, let's keep empty.
+    // update numbers
+    historyNumbersDiv.innerText = 'No tests yet. Click "RUN SPEED TEST"';
+})();
+</script>
+</body>
+</html>
